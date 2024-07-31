@@ -1,0 +1,349 @@
+# serializer version: 1
+# name: test_vpc_properly
+  dict({
+    'Outputs': dict({
+      'Subnetprivate1': dict({
+        'Export': dict({
+          'Name': 'Test-Subnet-private1',
+        }),
+        'Value': dict({
+          'Ref': 'TestSubnetprivate1',
+        }),
+      }),
+      'Subnetprivate2': dict({
+        'Export': dict({
+          'Name': 'Test-Subnet-private2',
+        }),
+        'Value': dict({
+          'Ref': 'TestSubnetprivate2',
+        }),
+      }),
+      'Subnetpublic1': dict({
+        'Export': dict({
+          'Name': 'Test-Subnet-public1',
+        }),
+        'Value': dict({
+          'Ref': 'TestSubnetpublic1',
+        }),
+      }),
+      'Subnetpublic2': dict({
+        'Export': dict({
+          'Name': 'Test-Subnet-public2',
+        }),
+        'Value': dict({
+          'Ref': 'TestSubnetpublic2',
+        }),
+      }),
+      'VPC': dict({
+        'Export': dict({
+          'Name': 'Test-VPC',
+        }),
+        'Value': dict({
+          'Ref': 'TestVPC',
+        }),
+      }),
+    }),
+    'Parameters': dict({
+      'BootstrapVersion': dict({
+        'Default': '/cdk-bootstrap/hnb659fds/version',
+        'Description': 'Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]',
+        'Type': 'AWS::SSM::Parameter::Value<String>',
+      }),
+    }),
+    'Resources': dict({
+      'TestEIPpublic1': dict({
+        'Properties': dict({
+          'Domain': 'vpc',
+        }),
+        'Type': 'AWS::EC2::EIP',
+      }),
+      'TestEIPpublic2': dict({
+        'Properties': dict({
+          'Domain': 'vpc',
+        }),
+        'Type': 'AWS::EC2::EIP',
+      }),
+      'TestGateway': dict({
+        'Properties': dict({
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Gateway',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::EC2::InternetGateway',
+      }),
+      'TestGatewayAttachment': dict({
+        'Properties': dict({
+          'InternetGatewayId': dict({
+            'Ref': 'TestGateway',
+          }),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::VPCGatewayAttachment',
+      }),
+      'TestNatGatewaypublic1': dict({
+        'Properties': dict({
+          'AllocationId': dict({
+            'Fn::GetAtt': list([
+              'TestEIPpublic1',
+              'AllocationId',
+            ]),
+          }),
+          'SubnetId': dict({
+            'Ref': 'TestSubnetpublic1',
+          }),
+        }),
+        'Type': 'AWS::EC2::NatGateway',
+      }),
+      'TestNatGatewaypublic2': dict({
+        'Properties': dict({
+          'AllocationId': dict({
+            'Fn::GetAtt': list([
+              'TestEIPpublic2',
+              'AllocationId',
+            ]),
+          }),
+          'SubnetId': dict({
+            'Ref': 'TestSubnetpublic2',
+          }),
+        }),
+        'Type': 'AWS::EC2::NatGateway',
+      }),
+      'TestPublicRoute': dict({
+        'Properties': dict({
+          'DestinationCidrBlock': '0.0.0.0/0',
+          'GatewayId': dict({
+            'Ref': 'TestGateway',
+          }),
+          'RouteTableId': dict({
+            'Ref': 'TestRoutePublic',
+          }),
+        }),
+        'Type': 'AWS::EC2::Route',
+      }),
+      'TestRoutePublic': dict({
+        'Properties': dict({
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Route-Public',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::RouteTable',
+      }),
+      'TestRouteprivate1': dict({
+        'Properties': dict({
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Route-private1',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::RouteTable',
+      }),
+      'TestRouteprivate2': dict({
+        'Properties': dict({
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Route-private2',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::RouteTable',
+      }),
+      'TestSubnetprivate1': dict({
+        'Properties': dict({
+          'AvailabilityZone': 'ap-northeast-1c',
+          'CidrBlock': '10.10.2.0/24',
+          'MapPublicIpOnLaunch': False,
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Subnet-private1',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::Subnet',
+      }),
+      'TestSubnetprivate1Association': dict({
+        'Properties': dict({
+          'RouteTableId': dict({
+            'Ref': 'TestRouteprivate1',
+          }),
+          'SubnetId': dict({
+            'Ref': 'TestSubnetprivate1',
+          }),
+        }),
+        'Type': 'AWS::EC2::SubnetRouteTableAssociation',
+      }),
+      'TestSubnetprivate2': dict({
+        'Properties': dict({
+          'AvailabilityZone': 'ap-northeast-1a',
+          'CidrBlock': '10.10.3.0/24',
+          'MapPublicIpOnLaunch': False,
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Subnet-private2',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::Subnet',
+      }),
+      'TestSubnetprivate2Association': dict({
+        'Properties': dict({
+          'RouteTableId': dict({
+            'Ref': 'TestRouteprivate2',
+          }),
+          'SubnetId': dict({
+            'Ref': 'TestSubnetprivate2',
+          }),
+        }),
+        'Type': 'AWS::EC2::SubnetRouteTableAssociation',
+      }),
+      'TestSubnetpublic1': dict({
+        'Properties': dict({
+          'AvailabilityZone': 'ap-northeast-1c',
+          'CidrBlock': '10.10.0.0/24',
+          'MapPublicIpOnLaunch': True,
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Subnet-public1',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::Subnet',
+      }),
+      'TestSubnetpublic1Association': dict({
+        'Properties': dict({
+          'RouteTableId': dict({
+            'Ref': 'TestRoutePublic',
+          }),
+          'SubnetId': dict({
+            'Ref': 'TestSubnetpublic1',
+          }),
+        }),
+        'Type': 'AWS::EC2::SubnetRouteTableAssociation',
+      }),
+      'TestSubnetpublic2': dict({
+        'Properties': dict({
+          'AvailabilityZone': 'ap-northeast-1a',
+          'CidrBlock': '10.10.1.0/24',
+          'MapPublicIpOnLaunch': True,
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-Subnet-public2',
+            }),
+          ]),
+          'VpcId': dict({
+            'Ref': 'TestVPC',
+          }),
+        }),
+        'Type': 'AWS::EC2::Subnet',
+      }),
+      'TestSubnetpublic2Association': dict({
+        'Properties': dict({
+          'RouteTableId': dict({
+            'Ref': 'TestRoutePublic',
+          }),
+          'SubnetId': dict({
+            'Ref': 'TestSubnetpublic2',
+          }),
+        }),
+        'Type': 'AWS::EC2::SubnetRouteTableAssociation',
+      }),
+      'TestVPC': dict({
+        'Properties': dict({
+          'CidrBlock': '10.10.0.0/16',
+          'EnableDnsHostnames': True,
+          'EnableDnsSupport': True,
+          'Tags': list([
+            dict({
+              'Key': 'Name',
+              'Value': 'Test-VPC',
+            }),
+          ]),
+        }),
+        'Type': 'AWS::EC2::VPC',
+      }),
+      'Testprivate1nat': dict({
+        'Properties': dict({
+          'DestinationCidrBlock': '0.0.0.0/0',
+          'NatGatewayId': dict({
+            'Ref': 'TestNatGatewaypublic1',
+          }),
+          'RouteTableId': dict({
+            'Ref': 'TestRouteprivate1',
+          }),
+        }),
+        'Type': 'AWS::EC2::Route',
+      }),
+      'Testprivate2nat': dict({
+        'Properties': dict({
+          'DestinationCidrBlock': '0.0.0.0/0',
+          'NatGatewayId': dict({
+            'Ref': 'TestNatGatewaypublic2',
+          }),
+          'RouteTableId': dict({
+            'Ref': 'TestRouteprivate2',
+          }),
+        }),
+        'Type': 'AWS::EC2::Route',
+      }),
+    }),
+    'Rules': dict({
+      'CheckBootstrapVersion': dict({
+        'Assertions': list([
+          dict({
+            'Assert': dict({
+              'Fn::Not': list([
+                dict({
+                  'Fn::Contains': list([
+                    list([
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                    ]),
+                    dict({
+                      'Ref': 'BootstrapVersion',
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+            'AssertDescription': "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---

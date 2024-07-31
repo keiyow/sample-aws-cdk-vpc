@@ -1,0 +1,29 @@
+vpcCidr: 10.10.0.0/16
+ipv6: true
+amazon_provided_ipv6_cidr_block: true
+publicSubnets:
+  - name: public1
+    cidr: 10.10.0.0/24
+    az: ap-northeast-1c
+    nat: true
+    ipv6: true
+  - name: public2
+    cidr: 10.10.1.0/24
+    az: ap-northeast-1a
+    nat: true
+    ipv6: true
+privateSubnets:
+  - name: private1
+    cidr: 10.10.2.0/24
+    az: ap-northeast-1c
+    nat: true
+    natRoute: public1
+    ipv6: true
+    dns64: true
+  - name: private2
+    cidr: 10.10.3.0/24
+    az: ap-northeast-1a
+    nat: true
+    natRoute: public2
+    ipv6: true
+    dns64: true
