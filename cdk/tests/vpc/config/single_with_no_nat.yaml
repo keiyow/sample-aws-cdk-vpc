@@ -1,0 +1,12 @@
+vpcCidr: 10.10.0.0/16
+publicSubnets:
+  - name: public1
+    cidr: 10.10.0.0/24
+    az: ap-northeast-1c
+    nat: false
+privateSubnets:
+  - name: private1
+    cidr: 10.10.2.0/24
+    az: ap-northeast-1c
+    nat: false
+    natRoute: public1
