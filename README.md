@@ -21,7 +21,7 @@ source .venv/bin/activate
  |stage|構成|
  | --- | --- |
  | multi_with_nat | パブリックネットワーク x 2、プライベートネットワーク x 2、NAT Gateway x 2|
- | multi_with_no_nat | パブリックネットワーク x 2、Isoratedネットワーク x 2 |
+ | multi_with_no_nat | パブリックネットワーク x 2、Isolatedネットワーク x 2 |
  | multi_with_nat_ipv6_dualstack|パブリックネットワーク x 2、プライベートネットワーク x 2、NAT Gateway x 2、Egress Only Internet Gateway|
  | multi_with_single_nat |パブリックネットワーク x 2、プライベートネットワーク x 2、NAT Gateway|
  | single_with_nat |パブリックネットワーク、プライベートネットワーク、NAT Gateway|
@@ -29,17 +29,20 @@ source .venv/bin/activate
 ### DIFFのコマンド例
 
 ```bash
+cd cdk
 cdk diff --context stage=multi_with_nat --context service_name=test-multi-with-nat
 ```
 
 #### DEPLOYのコマンド例
 
 ```bash
+cd cdk
 cdk deploy --context stage=multi_with_nat --context service_name=test-multi-with-nat
 ```
 
 #### DESTROYのコマンド例
 
 ```bash
+cd cdk
 cdk destroy --context stage=multi_with_nat --context service_name=test-multi-with-nat
 ```
